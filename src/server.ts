@@ -3,7 +3,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 import { ApolloServer } from "apollo-server";
-import { context } from "../graphql/context";
+import { context } from "./context";
 import { schema } from "../graphql/schema";
 
 const server = new ApolloServer({

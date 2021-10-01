@@ -7,7 +7,7 @@ export const schema = makeSchema({
     typegen: __dirname + "/generated/nexus.ts",
   },
   contextType: {
-    module: require.resolve("./context"),
+    module: require.resolve("../src/context"),
     export: "Context",
   },
   sourceTypes: {
