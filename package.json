@@ -1,0 +1,45 @@
+{
+  "name": "graphql-prisma",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "ts-node-dev --no-notify --respawn --transpile-only src/server",
+    "start": "node dist/server",
+    "clean": "rm -rf dist",
+    "postinstall": "tsc",
+    "build": "npm -s run clean && npm -s run generate && tsc",
+    "generate": "npm -s run update:prisma && npm -s run generate:nexus",
+    "generate:nexus": "ts-node --transpile-only graphql/schema",
+    "update:prisma": "prisma migrate dev && prisma generate"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leonardosimmons/graphql-server.git"
+  },
+  "author": "shadowdrifta",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/leonardosimmons/graphql-server/issues"
+  },
+  "homepage": "https://github.com/leonardosimmons/graphql-server#readme",
+  "dependencies": {
+    "@prisma/client": "^3.1.1",
+    "apollo-server": "^3.3.0",
+    "graphql": "^15.6.0",
+    "graphql-scalars": "^1.10.1",
+    "nexus": "^1.1.0"
+  },
+  "devDependencies": {
+    "@types/graphql": "^14.5.0",
+    "@types/node": "^16.10.2",
+    "@types/ws": "^8.2.0",
+    "dotenv": "^10.0.0",
+    "prisma": "^3.1.1",
+    "ts-node": "^10.2.1",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.4.3"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  }
+}
