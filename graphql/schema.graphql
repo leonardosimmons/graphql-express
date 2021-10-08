@@ -2,7 +2,16 @@
 ### Do not make changes to this file directly
 
 
+type Contact {
+  avatar: String!
+  email: String!
+  firstname: String!
+  id: String!
+  lastname: String!
+}
+
 type Post {
+  author: User
   authorId: Int!
   content: String!
   id: Int!
@@ -11,9 +20,10 @@ type Post {
 }
 
 type Query {
+  contacts: [Contact]
   post(postId: String!): Post
   posts: [Post]
-  publishedPosts(postId: Int): [Post]
+  publishedPosts(authorId: Int): [Post]
   user(userId: String!): User
   users: [User]
 }

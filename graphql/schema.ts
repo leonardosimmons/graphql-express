@@ -1,14 +1,24 @@
 import {
-  enumType,
   intArg,
   makeSchema,
   nonNull,
+  nullable,
   objectType,
-  queryType,
   stringArg,
 } from "nexus";
 import { nexusPrisma } from "nexus-plugin-prisma";
 import { join } from "path";
+
+export const Contact = objectType({
+  name: "Contact",
+  definition(t) {
+    t.model.id();
+    t.model.firstname();
+    t.model.lastname();
+    t.model.email();
+    t.model.avatar();
+  },
+});
 
 export const Post = objectType({
   name: "Post",
@@ -18,6 +28,15 @@ export const Post = objectType({
     t.model.content();
     t.model.published();
     t.model.authorId();
+    t.field("author", {
+      type: "User",
+      resolve: (_parent, _, ctx) =>
+        ctx.prisma.user.findUnique({
+          where: {
+            id: Number(_parent.authorId),
+          },
+        }),
+    });
   },
 });
 
@@ -29,10 +48,10 @@ export const User = objectType({
     t.model.email();
     t.nullable.list.field("posts", {
       type: "Post",
-      resolve: (_parent, __, ctx) =>
+      resolve: (_parent, _, ctx) =>
         ctx.prisma.post.findMany({
           where: {
-            id: Number(_parent.id),
+            authorId: Number(_parent.id),
           },
         }),
     });
@@ -42,6 +61,11 @@ export const User = objectType({
 export const Query = objectType({
   name: "Query",
   definition(t) {
+    t.list.field("contacts", {
+      type: "Contact",
+      resolve: (_, __, ctx) => ctx.prisma.contact.findMany(),
+    });
+
     t.list.field("posts", {
       type: "Post",
       resolve: (_, __, ctx) => ctx.prisma.post.findMany(),
@@ -63,18 +87,17 @@ export const Query = objectType({
     t.list.field("publishedPosts", {
       type: "Post",
       args: {
-        postId: intArg(),
+        authorId: nullable(intArg()),
       },
-      resolve: (_, { postId }, ctx) => {
-        if (postId) {
+      resolve: (_, { authorId }, ctx) => {
+        if (authorId) {
           return ctx.prisma.post.findMany({
             where: {
               published: true,
-              id: Number(postId),
+              authorId: Number(authorId),
             },
           });
         }
-
         return ctx.prisma.post.findMany({
           where: {
             published: true,
@@ -104,7 +127,7 @@ export const Query = objectType({
 });
 
 export const schema = makeSchema({
-  types: [Query, Post, User],
+  types: [Contact, Query, Post, User],
   outputs: {
     schema: join(process.cwd(), "graphql", "schema.graphql"),
     typegen: join(
