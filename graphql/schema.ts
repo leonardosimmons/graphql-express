@@ -6,28 +6,27 @@ import {
   objectType,
   stringArg,
 } from 'nexus';
-import { nexusPrisma } from 'nexus-plugin-prisma';
 import { join } from 'path';
 
 export const Contact = objectType({
   name: 'Contact',
   definition(t) {
-    t.model.id();
-    t.model.firstname();
-    t.model.lastname();
-    t.model.email();
-    t.model.avatar();
+    t.nonNull.string('id');
+    t.nonNull.string('firstname');
+    t.nonNull.string('lastname');
+    t.nonNull.string('email');
+    t.nonNull.string('avatar');
   },
 });
 
 export const Post = objectType({
   name: 'Post',
   definition(t) {
-    t.model.id();
-    t.model.title();
-    t.model.content();
-    t.model.published();
-    t.model.authorId();
+    t.nonNull.int('id');
+    t.nonNull.string('title');
+    t.nonNull.string('content');
+    t.nonNull.boolean('published');
+    t.nonNull.int('authorId');
     t.field('author', {
       type: 'User',
       resolve: (_parent, _, ctx) =>
@@ -43,9 +42,9 @@ export const Post = objectType({
 export const User = objectType({
   name: 'User',
   definition(t) {
-    t.model.id();
-    t.model.name();
-    t.model.email();
+    t.nonNull.int('id');
+    t.string('name');
+    t.nonNull.string('email');
     t.nullable.list.field('posts', {
       type: 'Post',
       resolve: (_parent, _, ctx) =>
@@ -150,5 +149,4 @@ export const schema = makeSchema({
       },
     ],
   },
-  plugins: [nexusPrisma({ experimentalCRUD: true })],
 });
