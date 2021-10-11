@@ -5,12 +5,12 @@ import {
   nullable,
   objectType,
   stringArg,
-} from "nexus";
-import { nexusPrisma } from "nexus-plugin-prisma";
-import { join } from "path";
+} from 'nexus';
+import { nexusPrisma } from 'nexus-plugin-prisma';
+import { join } from 'path';
 
 export const Contact = objectType({
-  name: "Contact",
+  name: 'Contact',
   definition(t) {
     t.model.id();
     t.model.firstname();
@@ -21,15 +21,15 @@ export const Contact = objectType({
 });
 
 export const Post = objectType({
-  name: "Post",
+  name: 'Post',
   definition(t) {
     t.model.id();
     t.model.title();
     t.model.content();
     t.model.published();
     t.model.authorId();
-    t.field("author", {
-      type: "User",
+    t.field('author', {
+      type: 'User',
       resolve: (_parent, _, ctx) =>
         ctx.prisma.user.findUnique({
           where: {
@@ -41,13 +41,13 @@ export const Post = objectType({
 });
 
 export const User = objectType({
-  name: "User",
+  name: 'User',
   definition(t) {
     t.model.id();
     t.model.name();
     t.model.email();
-    t.nullable.list.field("posts", {
-      type: "Post",
+    t.nullable.list.field('posts', {
+      type: 'Post',
       resolve: (_parent, _, ctx) =>
         ctx.prisma.post.findMany({
           where: {
@@ -59,20 +59,20 @@ export const User = objectType({
 });
 
 export const Query = objectType({
-  name: "Query",
+  name: 'Query',
   definition(t) {
-    t.list.field("contacts", {
-      type: "Contact",
+    t.list.field('contacts', {
+      type: 'Contact',
       resolve: (_, __, ctx) => ctx.prisma.contact.findMany(),
     });
 
-    t.list.field("posts", {
-      type: "Post",
+    t.list.field('posts', {
+      type: 'Post',
       resolve: (_, __, ctx) => ctx.prisma.post.findMany(),
     });
 
-    t.field("post", {
-      type: "Post",
+    t.field('post', {
+      type: 'Post',
       args: {
         postId: nonNull(stringArg()),
       },
@@ -84,8 +84,8 @@ export const Query = objectType({
         }),
     });
 
-    t.list.field("publishedPosts", {
-      type: "Post",
+    t.list.field('publishedPosts', {
+      type: 'Post',
       args: {
         authorId: nullable(intArg()),
       },
@@ -106,13 +106,13 @@ export const Query = objectType({
       },
     });
 
-    t.list.field("users", {
-      type: "User",
+    t.list.field('users', {
+      type: 'User',
       resolve: (_, __, ctx) => ctx.prisma.user.findMany(),
     });
 
-    t.field("user", {
-      type: "User",
+    t.field('user', {
+      type: 'User',
       args: {
         userId: nonNull(stringArg()),
       },
@@ -129,24 +129,24 @@ export const Query = objectType({
 export const schema = makeSchema({
   types: [Contact, Query, Post, User],
   outputs: {
-    schema: join(process.cwd(), "graphql", "schema.graphql"),
+    schema: join(process.cwd(), 'graphql', 'schema.graphql'),
     typegen: join(
       process.cwd(),
-      "node_modules",
-      "@types",
-      "nexus-typegen",
-      "index.d.ts"
+      'node_modules',
+      '@types',
+      'nexus-typegen',
+      'index.d.ts',
     ),
   },
   contextType: {
-    export: "Context",
-    module: join(process.cwd(), "graphql", "context.ts"),
+    export: 'Context',
+    module: join(process.cwd(), 'graphql', 'context.ts'),
   },
   sourceTypes: {
     modules: [
       {
-        module: "@prisma/client",
-        alias: "prisma",
+        module: '@prisma/client',
+        alias: 'prisma',
       },
     ],
   },

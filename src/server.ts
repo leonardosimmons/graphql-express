@@ -1,10 +1,10 @@
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
 }
 
-import { ApolloServer } from "apollo-server";
-import { context } from "../graphql/context";
-import { schema } from "../graphql/schema";
+import { ApolloServer } from 'apollo-server';
+import { context } from '../graphql/context';
+import { schema } from '../graphql/schema';
 
 const server = new ApolloServer({
   schema: schema,
