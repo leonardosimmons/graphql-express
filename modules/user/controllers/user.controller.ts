@@ -57,6 +57,7 @@ export async function getUsers(
   next: Express.NextFunction,
 ): Promise<void> {
   if (req.query.page && req.query.per_page) {
+    const model = new UserModel();
     const page: number = parseInt(req.query.page as string);
     const per_page: number = parseInt(req.query.per_page as string);
 
@@ -67,9 +68,8 @@ export async function getUsers(
       })
       .then((users) => {
         let info: Partial<User>[] = [];
-        users.forEach((element) => {
-          const user = new UserModel().filterUserInfo(element);
-          info.push(user);
+        users.forEach((user) => {
+          info.push(model.filterUserInfo(user));
         });
 
         res.status(200).json({
@@ -85,13 +85,13 @@ export async function getUsers(
         next(error);
       });
   } else {
+    const model = new UserModel();
     new PrismaClient().user
       .findMany()
       .then((users) => {
         let info: Partial<User>[] = [];
-        users.forEach((element) => {
-          const user = new UserModel().filterUserInfo(element);
-          info.push(user);
+        users.forEach((user) => {
+          info.push(model.filterUserInfo(user));
         });
 
         res.status(200).json({
@@ -171,7 +171,7 @@ export async function patchUser(
       },
     })
     .then((user) =>
-      res.status(200).json({
+      res.status(204).json({
         message: 'User successfully updated',
         payload: {
           id: user.id,
@@ -204,7 +204,7 @@ export async function deleteUser(
       },
     })
     .then((user) =>
-      res.status(201).json({
+      res.status(204).json({
         message: 'User succesfully deleted',
         payload: {
           user,
