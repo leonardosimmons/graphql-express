@@ -2,35 +2,18 @@
 ### Do not make changes to this file directly
 
 
-type Contact {
-  avatar: String!
-  email: String!
-  firstname: String!
-  id: ID!
-  lastname: String!
-}
-
-type Post {
-  author: User
-  authorId: Int!
-  content: String!
-  id: Int!
-  published: Boolean!
-  title: String!
-}
-
 type Query {
-  contacts: [Contact]
-  post(postId: String!): Post
-  posts: [Post]
-  publishedPosts(authorId: Int): [Post]
-  user(userId: String!): User
+  userById(userId: String!): User
   users: [User]
 }
 
 type User {
   email: String!
-  id: Int!
-  name: String
-  posts: [Post]
+  firstName: String!
+  id: ID
+  lastName: String
+  password: String!
+  permissionLevel: Int!
+  role: String!
+  status: String!
 }

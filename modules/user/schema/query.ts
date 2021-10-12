@@ -5,6 +5,8 @@ const GetUsers = extendType({
   definition(t) {
     t.list.field('users', {
       type: 'User',
+      complexity: 5,
+      authorize: (_, __, ctx) => ctx.user.status === 'authorized' && ctx.user.role === 'admin',
       resolve: (_, __, ctx) => ctx.prisma.user.findMany(),
     });
   },
@@ -21,7 +23,7 @@ const GetUserById = extendType({
       resolve: (_, { userId }, ctx) =>
         ctx.prisma.user.findUnique({
           where: {
-            id: Number(userId),
+            id: String(userId),
           },
         }),
     });

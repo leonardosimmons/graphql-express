@@ -7,26 +7,21 @@ datasource db {
   url      = "file:./dev.db"
 }
 
-model Contact {
-  id        String @id @default(cuid())
-  firstname String
-  lastname  String
-  email     String
-  avatar    String
-}
-
-model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String
-  published Boolean @default(false)
-  author    User    @relation(fields: [authorId], references: [id])
-  authorId  Int
-}
-
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
+  id              String    @id @default(cuid())
+  firstName       String
+  lastName        String?
+  email           String    @unique
+  password        String
+  role            String
+  status          String
+  permissionLevel Int
+  employer        Employer? @relation(fields: [employerId], references: [id])
+  employerId      String?
+}
+
+model Employer {
+  id   String @id @default(cuid())
+  name String @unique
+  User User[]
 }

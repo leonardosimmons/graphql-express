@@ -1,6 +1,6 @@
 export type UserAuthToken = {
   id: null | string;
-  roles: 'guest' | 'user' | 'admin';
+  role: 'guest' | 'user' | 'admin';
   status: 'not-authorized' | 'authorized';
   permissionLevel: number;
 };

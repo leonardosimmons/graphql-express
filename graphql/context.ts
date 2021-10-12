@@ -10,7 +10,7 @@ const prisma = new PrismaClient();
 
 const authInitialState: UserAuthToken = {
   id: null,
-  roles: 'guest',
+  role: 'guest',
   status: 'not-authorized',
   permissionLevel: 0,
 };
