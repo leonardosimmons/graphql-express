@@ -3,8 +3,9 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 import Express from 'express';
-import { ApolloServer } from 'apollo-server-express';
+import { ApolloServer, AuthenticationError } from 'apollo-server-express';
 import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core';
+import { ComplexityLimitRule, DepthLimitRule } from '../graphql/rules';
 import { NexusGraphQLSchema } from 'nexus/dist/core';
 import http from 'http';
 
@@ -14,7 +15,6 @@ import { consoleText } from '../lib/definitions';
 
 import headerRoutes from '../routes/headers';
 import errorRoutes from '../routes/errors';
-import { ComplexityLimitRule, DepthLimitRule } from '../graphql/rules';
 
 const { DEV_PORT, PORT } = process.env;
 
@@ -24,7 +24,15 @@ async function startApolloServer(schema: NexusGraphQLSchema, context: Context) {
   const SERVER_PORT: string = (PORT as string) || (DEV_PORT as string);
   const server = new ApolloServer({
     schema: schema,
-    context: context,
+    context: ({ req }) => {
+      const token: string = req.headers.authorization || '';
+
+      //if (!token) throw new AuthenticationError('Unauthorized user');
+
+      return {
+        ...context,
+      };
+    },
     validationRules: [ComplexityLimitRule, DepthLimitRule],
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   });
@@ -38,7 +46,7 @@ async function startApolloServer(schema: NexusGraphQLSchema, context: Context) {
 
   // Routes ----------------------
   app.use(headerRoutes);
-  app.use('/rest', (req, res) => {
+  app.use('/rest', (_, res) => {
     res.json({
       data: 'Api is working',
     });
