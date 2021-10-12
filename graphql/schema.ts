@@ -4,6 +4,7 @@ import {
   nonNull,
   nullable,
   objectType,
+  queryComplexityPlugin,
   stringArg,
 } from 'nexus';
 import { join } from 'path';
@@ -11,7 +12,7 @@ import { join } from 'path';
 export const Contact = objectType({
   name: 'Contact',
   definition(t) {
-    t.nonNull.string('id');
+    t.nonNull.id('id');
     t.nonNull.string('firstname');
     t.nonNull.string('lastname');
     t.nonNull.string('email');
@@ -149,4 +150,5 @@ export const schema = makeSchema({
       },
     ],
   },
+  plugins: [queryComplexityPlugin()],
 });

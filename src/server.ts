@@ -14,6 +14,7 @@ import { consoleText } from '../lib/definitions';
 
 import headerRoutes from '../routes/headers';
 import errorRoutes from '../routes/errors';
+import { ComplexityLimitRule, DepthLimitRule } from '../graphql/rules';
 
 const { DEV_PORT, PORT } = process.env;
 
@@ -24,11 +25,11 @@ async function startApolloServer(schema: NexusGraphQLSchema, context: Context) {
   const server = new ApolloServer({
     schema: schema,
     context: context,
+    validationRules: [ComplexityLimitRule, DepthLimitRule],
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   });
   await server.start();
 
-  // Middleware ------------------
   server.applyMiddleware({ app });
 
   // Parsers --------------------

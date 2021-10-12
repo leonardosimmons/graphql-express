@@ -6,7 +6,7 @@ type Contact {
   avatar: String!
   email: String!
   firstname: String!
-  id: String!
+  id: ID!
   lastname: String!
 }
 
