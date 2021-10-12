@@ -13,8 +13,9 @@ import { schema } from '../graphql/schema';
 import { Context, context } from '../graphql/context';
 import { consoleText } from '../lib/definitions';
 
-import headerRoutes from '../routes/headers';
-import errorRoutes from '../routes/errors';
+import HeaderRoutes from '../routes/headers';
+import ErrorRoutes from '../routes/errors';
+import UserRoutes from '../modules/user/routes.config';
 
 const { DEV_PORT, PORT } = process.env;
 
@@ -45,13 +46,9 @@ async function startApolloServer(schema: NexusGraphQLSchema, context: Context) {
   app.use(Express.json());
 
   // Routes ----------------------
-  app.use(headerRoutes);
-  app.use('/rest', (_, res) => {
-    res.json({
-      data: 'Api is working',
-    });
-  });
-  app.use(errorRoutes);
+  app.use(HeaderRoutes);
+  app.use('/admin/user/', UserRoutes);
+  app.use(ErrorRoutes);
 
   await new Promise((resolve: any) =>
     httpServer.listen({ port: SERVER_PORT }, resolve),
