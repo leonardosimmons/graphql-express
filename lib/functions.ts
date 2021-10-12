@@ -55,6 +55,7 @@ export function httpError(err: Error, msg?: string): HttpError {
   const error: HttpError = err;
   error.statusCode = 502;
   error.message = msg ? msg : 'Something went wrong';
+  error.log = err.message || error.message;
   return error;
 }
 

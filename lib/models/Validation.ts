@@ -1,5 +1,5 @@
-import { Combinable } from 'lib/types';
-import { preg_match } from 'lib/functions';
+import { Combinable } from '../types';
+import { preg_match } from '../functions';
 
 interface ValidationInterface {
   readonly isValidated: boolean;
