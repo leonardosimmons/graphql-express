@@ -1,11 +1,6 @@
-import {
-  fieldAuthorizePlugin,
-  makeSchema,
-  queryComplexityPlugin,
-} from 'nexus';
+import { fieldAuthorizePlugin, makeSchema, queryComplexityPlugin } from 'nexus';
 import { join } from 'path';
 import { UserSchema } from '../modules/user';
-
 
 const types = { UserSchema };
 
@@ -33,8 +28,6 @@ export const schema = makeSchema({
       },
     ],
   },
-  plugins: [
-    fieldAuthorizePlugin(),
-    queryComplexityPlugin()
-  ],
+  prettierConfig: join(process.cwd(), '.prettierrc'),
+  plugins: [fieldAuthorizePlugin(), queryComplexityPlugin()],
 });
