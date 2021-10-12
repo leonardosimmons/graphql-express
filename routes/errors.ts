@@ -16,11 +16,6 @@ router.use((error: HttpError, _: Express.Request, res: Express.Response) => {
   const message: string = error.message;
   const log: string | undefined = error.log;
 
-  console.log(
-    consoleText.red,
-    `[error] ${error.log ? error.log : error.message}`,
-  );
-
   if (log) {
     res.status(status).json({
       message: message,
