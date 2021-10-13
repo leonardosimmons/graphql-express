@@ -158,16 +158,26 @@ export async function patchUser(
     res.end('Error: No request body was provided');
     return;
   }
+  const prisma = new PrismaClient();
+  const user = await prisma.user.findUnique({
+    where: {
+      id: String(req.query.userid),
+    },
+    select: {
+      permissionLevel: true,
+    },
+  });
 
-  new PrismaClient().user
+  prisma.user
     .update({
       where: {
         id: String(req.params.userId),
       },
       data: {
-        firstName: 'Test admin',
-        permissionLevel: 10,
-        role: 'admin',
+        ...req.body,
+        permissionLevel: req.body.permissionLevel
+          ? parseInt(req.body.permissionLevel)
+          : user?.permissionLevel,
       },
     })
     .then((user) =>
