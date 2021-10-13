@@ -18,7 +18,7 @@ export async function hasAuthValidFields(
     }
 
     if (errors.length) {
-      return res.status(400).send({ errors: errors.join(', ') });
+      return res.status(400).send({ errors: errors.join(',') });
     } else {
       return next();
     }
@@ -36,12 +36,6 @@ export async function verifyUser(
   res: Express.Response,
   next: Express.NextFunction,
 ): Promise<void> {
-  if (!req.body) {
-    res.statusCode = 404;
-    res.end('Error: No request body was provided');
-    return;
-  }
-
   new PrismaClient().user
     .findUnique({
       where: {
@@ -59,7 +53,7 @@ export async function verifyUser(
 
         const token: HashToken = crypto.hash(req.body.password, salt);
         if (token.hash === pwFields[1]) {
-          req.body = {
+          res.locals = {
             userId: user.id,
             email: user.email,
             permissionLevel: user.permissionLevel,

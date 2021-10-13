@@ -17,10 +17,10 @@ export async function login(
     }
 
     const crypto = new HashController();
-    const refreshId: string = (req.body.userId + JWT_SECRET) as string;
+    const refreshId: string = (res.locals.userId + JWT_SECRET) as string;
     const hashToken: HashToken = crypto.hash(refreshId);
     req.body.refreshKey = hashToken.salt;
-    const authToken = jwt.sign(req.body, JWT_SECRET as string, {
+    const authToken = jwt.sign(res.locals, JWT_SECRET as string, {
       expiresIn: JWT_EXPIRATION_IN_SECONDS as string,
     });
     const buffer = Buffer.from(hashToken.hash);
@@ -45,8 +45,7 @@ export async function refresh_token(
       return;
     }
 
-    req.body = req.body.jwt;
-    const token = jwt.sign(req.body, JWT_SECRET as string, {
+    const token = jwt.sign(res.locals.jwt, JWT_SECRET as string, {
       expiresIn: JWT_EXPIRATION_IN_SECONDS,
     });
     res.status(201).json({ id: token });
